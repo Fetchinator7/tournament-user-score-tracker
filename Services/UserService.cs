@@ -18,24 +18,24 @@ namespace tournament_user_score_tracker.Services
         }
 
         public List<User> Get() =>
-            _users.Find(book => true).ToList();
+            _users.Find(user => true).ToList();
 
-        public User Get(int id) =>
-            _users.Find<User>(book => book.Id == id).FirstOrDefault();
+        public User Get(string id) =>
+            _users.Find<User>(user => user.Id == id).FirstOrDefault();
 
-        public User Create(User book)
+        public User Create(User user)
         {
-            _users.InsertOne(book);
-            return book;
+            _users.InsertOne(user);
+            return user;
         }
 
-        public void Update(int id, User bookIn) =>
-            _users.ReplaceOne(book => book.Id == id, bookIn);
+        public void Update(string id, User userIn) =>
+            _users.ReplaceOne(user => user.Id == id, userIn);
 
-        public void Remove(User bookIn) =>
-            _users.DeleteOne(book => book.Id == bookIn.Id);
+        public void Remove(User userIn) =>
+            _users.DeleteOne(user => user.Id == userIn.Id);
 
-        public void Remove(int id) =>
-            _users.DeleteOne(book => book.Id == id);
+        public void Remove(string id) =>
+            _users.DeleteOne(user => user.Id == id);
     }
 }
