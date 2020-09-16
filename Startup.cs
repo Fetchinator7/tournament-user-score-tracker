@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using tournament_user_score_tracker.Models;
-using System;
+using tournament_user_score_tracker.Services;
 namespace tournament_user_score_tracker
 {
     public class Startup
@@ -22,23 +21,15 @@ namespace tournament_user_score_tracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MongodbDatabaseSettings>(
+                Configuration.GetSection(nameof(MongodbDatabaseSettings)));
 
-            // Add framework services.
-            // see if we have an environment variable
-            string DATABASE_URL = Environment.GetEnvironmentVariable("DATABASE_URL_STR");
-            string connectionString = (DATABASE_URL == null ? Configuration.GetConnectionString("DefaultConnection") : DATABASE_URL);
-            Console.WriteLine($"Using connection string: {connectionString}");
+            services.AddSingleton<IMongodbDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongodbDatabaseSettings>>().Value);
 
-            services.AddDbContext<ApplicationContext>(options =>
-                options.UseNpgsql(connectionString)
-            );
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddSingleton<UserService>();
 
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +45,6 @@ namespace tournament_user_score_tracker
             }
 
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
             app.UseRouting();
 

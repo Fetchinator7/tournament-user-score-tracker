@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tournament_user_score_tracker.Models;
-using Microsoft.EntityFrameworkCore;
+using tournament_user_score_tracker.Services;
 
 namespace tournament_user_score_tracker.Controllers
 {
@@ -11,8 +11,8 @@ namespace tournament_user_score_tracker.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationContext _context;
-        public UserController(ApplicationContext context)
+        private readonly UserService _context;
+        public UserController(UserService context)
         {
             _context = context;
         }
