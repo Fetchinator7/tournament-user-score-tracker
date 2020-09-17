@@ -1,16 +1,11 @@
+using System;
+
 namespace tournament_user_score_tracker.Models
 {
-    public class MongodbDatabaseSettings : IMongodbDatabaseSettings
+    public class MongodbDatabaseSettings
     {
-        public string UsersCollectionName { get; set; }
-        public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
-    }
-
-    public interface IMongodbDatabaseSettings
-    {
-        string UsersCollectionName { get; set; }
-        string ConnectionString { get; set; }
-        string DatabaseName { get; set; }
+        public string ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        public string UsersCollectionName = Environment.GetEnvironmentVariable("USERS_COLLECTION_NAME");
+        public string DatabaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
     }
 }
