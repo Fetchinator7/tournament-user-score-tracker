@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using tournament_user_score_tracker.Models;
 using tournament_user_score_tracker.Services;
+using System;
+
 namespace tournament_user_score_tracker
 {
     public class Startup
@@ -22,10 +24,28 @@ namespace tournament_user_score_tracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            DotNetEnv.Env.Load();
+            string CONNECTION_STRING = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            string USERS_COLLECTION_NAME = Environment.GetEnvironmentVariable("USERS_COLLECTION_NAME");
+            string DATABASE_NAME = Environment.GetEnvironmentVariable("DATABASE_NAME");
+
+            if (CONNECTION_STRING == null)
+            {
+                throw new Exception("Remote Mongodb connection string not found.");
+            }
+            if (USERS_COLLECTION_NAME == null)
+            {
+                throw new Exception("Remote Mongodb user collection string not found.");
+            }
+            if (DATABASE_NAME == null)
+            {
+                throw new Exception("Remote Mongodb database name string not found.");
+            }
+
             services.Configure<MongodbDatabaseSettings>(
                 Configuration.GetSection(nameof(MongodbDatabaseSettings)));
 
-            services.AddSingleton<IMongodbDatabaseSettings>(sp =>
+            services.AddSingleton<MongodbDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<MongodbDatabaseSettings>>().Value);
 
             services.AddSingleton<UserService>();

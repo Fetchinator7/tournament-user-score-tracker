@@ -9,7 +9,7 @@ namespace tournament_user_score_tracker.Services
     {
         private readonly IMongoCollection<User> _users;
 
-        public UserService(IMongodbDatabaseSettings settings)
+        public UserService(MongodbDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);

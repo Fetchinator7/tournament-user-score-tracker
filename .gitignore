@@ -233,3 +233,6 @@ _Pvt_Extensions
 
 # Mac files
 .DS_Store
+
+# Development Environment
+.env
